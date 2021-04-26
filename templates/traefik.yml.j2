@@ -16,6 +16,7 @@ services:
       - "--log.filePath=/var/log/traefik/traefik.log"
       - "--log.format={{ log_format }}"
       - "--log.level={{ log_level }}"
+      - "--providers.docker.endpoint=tcp://127.0.0.1:2377"
       - "--providers.docker.exposedByDefault={{ expose_by_default }}"
       - "--providers.docker.network={{ network }}"
       - "--providers.docker.swarmMode=true"
