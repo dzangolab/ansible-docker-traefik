@@ -2,63 +2,63 @@
 version: "3.7"
 
 networks:
-  {{ network }}:
+  {{ traefik__network }}:
     external: true
     
 services:
   traefik:
-    container_name: "{{ container_name }}"
-    image: "{{ image }}"
+    container_name: "{{ traefik__container_name }}"
+    image: "{{ traefik__image }}"
     command:
       - "--accesslog=true"
       - "--accesslog.filePath=/var/log/traefik/access.log"
-      - "--accesslog.format={{ access_log_format }}"
-      - "--api.dashboard={{ dashboard }}"
+      - "--accesslog.format={{ traefik__access_log_format }}"
+      - "--api.dashboard={{ traefik__dashboard }}"
       - "--log.filePath=/var/log/traefik/traefik.log"
-      - "--log.format={{ log_format }}"
-      - "--log.level={{ log_level }}"
-      - "--providers.docker.exposedByDefault={{ expose_by_default }}"
-      - "--providers.docker.network={{ network }}"
+      - "--log.format={{ traefik__log_format }}"
+      - "--log.level={{ traefik__log_level }}"
+      - "--providers.docker.exposedByDefault={{ traefik__expose_by_default }}"
+      - "--providers.docker.network={{ traefik__network }}"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.swarmModeRefreshSeconds={{ refresh }}"
-      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.le.acme.tlschallenge=true"
-      - "--certificatesresolvers.le.acme.caserver={{ acme_caserver }}"
-      - "--certificatesresolvers.le.acme.email={{ acme_email }}"
+      - "--certificatesresolvers.le.acme.caserver={{ traefik__acme_caserver }}"
+      - "--certificatesresolvers.le.acme.email={{ traefik__acme_email }}"
+      - "--certificatesresolvers.le.acme.preferredchain="ISRG Root X1"
       - "--certificatesresolvers.le.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
     deploy:
-      placement:
-        constraints:
-          - "node.labels.{{ label }} == true"
-          - node.role == manager
       labels:
-        - "traefik.docker.network={{ network }}"
+        - "traefik.docker.network={{ traefik__network }}"
         - "traefik.enable=true"
-        - "traefik.http.middlewares.auth.basicauth.users={{ dashboard_basicauth_passwords | join(',') }}"
+        - "traefik.http.middlewares.auth.basicauth.users={{ traefik__dashboard_basicauth_passwords | join(',') }}"
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
         - "traefik.http.routers.traefik-http.entrypoints=web"
         - "traefik.http.routers.traefik-http.middlewares=https-redirect"
-        - "traefik.http.routers.traefik-http.rule=Host(`{{ domain }}`)"
+        - "traefik.http.routers.traefik-http.rule=Host(`{{ traefik__domain }}`)"
         - "traefik.http.routers.traefik-https.entrypoints=websecure"
         - "traefik.http.routers.traefik-https.middlewares=auth"
         - "traefik.http.routers.traefik-https.rule=Host(`{{ domain }}`)"
         - "traefik.http.routers.traefik-https.service=api@internal"
         - "traefik.http.routers.traefik-https.tls=true"
         - "traefik.http.routers.traefik-https.tls.certresolver=le"
-        - "traefik.http.routers.traefik-https.tls.domains[0].main={{ domain }}"
+        - "traefik.http.routers.traefik-https.tls.domains[0].main={{ traefik__domain }}"
         - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      placement:
+        constraints:
+          - "node.labels.{{ traefik__label }} == true"
+          - node.role == manager
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
     networks:
-      - "{{ network }}"
+      - "{{ traefik__network }}"
     ports:
       - target: 80
         published: 80
@@ -68,7 +68,7 @@ services:
         mode: ingress
     volumes:
       - acme:/etc/traefik
-      - "{{ log_dir }}:/var/log/traefik"
+      - "{{ traefik__log_dir }}:/var/log/traefik"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
 volumes:

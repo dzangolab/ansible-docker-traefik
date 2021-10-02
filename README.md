@@ -11,21 +11,31 @@ This role requires Ansible 1.2 or higher.
 Ansible variables are listed below with their default values.
 
 ```
-traefik_certificates: []
-traefik_docker_domain
-traefik_group: root
-traefik_dir: /etc/traefik
-traefik_network: traefik
-traefik_user: root
-traefik_volumes: []
+traefik__access_log_format: common
+traefik__acme_caserver: https://acme-v02.api.letsencrypt.org/directory
+traefik__acme_email: 
 
-acme_email: "me@example.com"
-acme_domains:
-  - domain: mydomain.com
-    sans:
-      - www.mydomain.com
-acme_logging: true
-acme_staging: false
+traefik__dashboard: true
+traefik__dashboard_basicauth_passwords: []
+
+traefik__deploy_dir:
+traefik__deploy_group: 
+traefik__deploy_user:
+
+traefik__expose_by_default: false
+
+traefik__image: traefik:v2.5.3
+
+traefik__label: traefik
+traefik__log_dir: /var/log/traefik
+traefik__log_format: common
+traefik__log_level: ERROR
+
+traefik__network: traefik
+
+traefik__refresh: 15
+
+traefik__state: started | stopped
 ```
 
 ## Example playbook
@@ -41,10 +51,8 @@ acme_staging: false
       		CertFile: "/path/to/certificate.crt",
       		KeyFile: "/path/tto/keyfile.key"
       	}
-      traefik_docker_domain: mydomain.com
-      traefik_network: mydomain
-      traefik_volumes:
-      - /etc/ssl:/etc/ssl
+      traefik__domain: mydomain.com
+      traefik__network: mydomain
 ```
 
 ## License

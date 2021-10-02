@@ -2,49 +2,40 @@
 - name: Ensure traefik data directory exist
   become: true
   file:
-    group: "{{ deploy_group }}"
-    owner: "{{ deploy_user }}"
+    group: "{{ traefik__deploy_group }}"
+    owner: "{{ traefik__deploy_user }}"
     path: "{{ item }}"
     state: directory
     recurse: yes
   with_items:
-    - "{{ deploy_dir }}"
-    - "{{ log_dir }}"
+    - "{{ traefik__deploy_dir }}"
+    - "{{ traefik__log_dir }}"
 
 - name: Copy files
   become: true
   template:
-    dest: "{{ deploy_dir }}/traefik.yml"
-    group: "{{ deploy_group }}"
-    owner: "{{ deploy_user }}"
+    dest: "{{ traefik__deploy_dir }}/traefik.yml"
+    group: "{{ traefik__deploy_group }}"
+    owner: "{{ traefik__deploy_user }}"
     src: "templates/traefik.yml.j2"
-  when: state == "started"
+  when: traefik__state == "started"
 
-- name: Set acme.json permissions
-  become: true
-  file:
-    group: "{{ deploy_group }}"
-    mode: 600
-    owner: "{{ deploy_user }}"
-    path: "{{ deploy_dir }}/acme.json"
-    state: touch
-  when: state == "started"
 
 - name: Setup logrotate
   become: true
   blockinfile:
     path: "/etc/logrotate.d/traefik"
     block: |
-      /{{ log_dir }}/*.log {
+      /{{ traefik__log_dir }}/*.log {
         compress
-        create
+        create 0644 {{ traefik__deploy_user }} {{ traefik__deploy_group }}
         daily
         dateext
         dateformat -%Y%m%d
         missingok
         notifempty
         postrotate
-          docker kill --signal="USR1" {{ container_name }}
+          docker kill --signal="USR1" $(docker ps | grep traefik | awk '{print $1}')
         endscript
         rotate 5
       } 
@@ -53,11 +44,11 @@
 - name: Start traefik
   command: docker stack deploy -c traefik.yml traefik
   args:
-    chdir: "{{ deploy_dir }}"
-  when: state == "started"
+    chdir: "{{ traefik__deploy_dir }}"
+  when: traefik__state == "started"
 
 - name: Stop traefik
   command: docker stack rm traefik
   args:
-    chdir: "{{ deploy_dir }}"
-  when: state == "stopped"
+    chdir: "{{ traefik__deploy_dir }}"
+  when: traefik__state == "stopped"
