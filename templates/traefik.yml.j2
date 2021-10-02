@@ -1,3 +1,4 @@
+# {{ ansible_managed }}
 version: "3.7"
 
 networks:
@@ -10,10 +11,10 @@ services:
     image: "{{ image }}"
     command:
       - "--accesslog=true"
-      - "--accesslog.filePath=/var/logs/traefik/access.log"
+      - "--accesslog.filePath=/var/log/traefik/access.log"
       - "--accesslog.format={{ access_log_format }}"
       - "--api.dashboard={{ dashboard }}"
-      - "--log.filePath=/var/logs/traefik/traefik.log"
+      - "--log.filePath=/var/log/traefik/traefik.log"
       - "--log.format={{ log_format }}"
       - "--log.level={{ log_level }}"
       - "--providers.docker.exposedByDefault={{ expose_by_default }}"
@@ -40,12 +41,9 @@ services:
         - "traefik.http.middlewares.auth.basicauth.users={{ dashboard_basicauth_passwords | join(',') }}"
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-
         - "traefik.http.routers.traefik-http.entrypoints=web"
         - "traefik.http.routers.traefik-http.middlewares=https-redirect"
         - "traefik.http.routers.traefik-http.rule=Host(`{{ domain }}`)"
-
-
         - "traefik.http.routers.traefik-https.entrypoints=websecure"
         - "traefik.http.routers.traefik-https.middlewares=auth"
         - "traefik.http.routers.traefik-https.rule=Host(`{{ domain }}`)"

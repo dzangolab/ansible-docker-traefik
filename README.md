@@ -19,7 +19,7 @@ traefik_network: traefik
 traefik_user: root
 traefik_volumes: []
 
-acme_email: "me@google.com"
+acme_email: "me@example.com"
 acme_domains:
   - domain: mydomain.com
     sans:
