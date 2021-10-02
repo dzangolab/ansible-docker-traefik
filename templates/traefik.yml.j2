@@ -25,7 +25,7 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.le.acme.caserver={{ traefik__acme_caserver }}"
       - "--certificatesresolvers.le.acme.email={{ traefik__acme_email }}"
-      - "--certificatesresolvers.le.acme.preferredchain="ISRG Root X1"
+      - "--certificatesresolvers.le.acme.preferredchain=ISRG Root X1"
       - "--certificatesresolvers.le.acme.storage=/etc/traefik/acme.json"
       - "--certificatesresolvers.le.acme.tlschallenge=true"
     deploy:
