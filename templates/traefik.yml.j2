@@ -7,8 +7,6 @@ networks:
     
 services:
   traefik:
-    container_name: "{{ traefik__container_name }}"
-    image: "{{ traefik__image }}"
     command:
       - "--accesslog=true"
       - "--accesslog.filePath=/var/log/traefik/access.log"
@@ -57,6 +55,7 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    image: "{{ traefik__image }}"
     networks:
       - "{{ traefik__network }}"
     ports:
