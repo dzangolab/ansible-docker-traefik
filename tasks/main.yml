@@ -6,7 +6,7 @@
     owner: "{{ traefik__deploy_user }}"
     path: "{{ item }}"
     state: directory
-    recurse: yes
+    recurse: true
   with_items:
     - "{{ traefik__deploy_dir }}"
     - "{{ traefik__log_dir }}"
@@ -38,7 +38,7 @@
           docker kill --signal="USR1" $(docker ps | grep traefik | awk '{print $1}')
         endscript
         rotate 5
-      } 
+      }
     create: true
 
 - name: Start traefik

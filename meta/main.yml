@@ -1,6 +1,6 @@
 galaxy_info:
   role_name: docker_traefik
-  author: Olivier Pichon <op@dzango.com>
+  author: dzangolab
   description: Installs traefik proxy and other useful services as docker containers
   company: Dzango Technologies Limited
 
@@ -9,15 +9,15 @@ galaxy_info:
   min_ansible_version: 1.2
 
   platforms:
-  - name: Ubuntu
-    versions:
-    - all
-  - name: Debian
-    versions:
-    - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
 
   galaxy_tags:
     - docker
     - traefik
 
-dependencies: []
+  dependencies: []
