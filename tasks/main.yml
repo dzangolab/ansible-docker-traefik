@@ -12,6 +12,15 @@
     - "{{ traefik__acme_dir }}"
     - "{{ traefik__log_dir }}"
 
+- name: Copy acme file
+  become: true
+  template:
+    dest: "{{ traefik__acme_dir }}/acme.json"
+    group: "{{ traefik__deploy_group }}"
+    owner: "{{ traefik__deploy_user }}"
+    src: "files/acme.json"
+  when: traefik__state == "started"
+
 - name: Copy files
   become: true
   template:
