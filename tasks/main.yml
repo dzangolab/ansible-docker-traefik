@@ -9,6 +9,7 @@
     recurse: true
   with_items:
     - "{{ traefik__deploy_dir }}"
+    - "{{ traefik__acme_dir }}"
     - "{{ traefik__log_dir }}"
 
 - name: Copy files
@@ -19,7 +20,6 @@
     owner: "{{ traefik__deploy_user }}"
     src: "templates/traefik.yml.j2"
   when: traefik__state == "started"
-
 
 - name: Setup logrotate
   become: true
