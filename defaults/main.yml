@@ -1,6 +1,6 @@
 traefik__access_log_format: "json"
 traefik__acme_caserver: "https://acme-v02.api.letsencrypt.org/directory"
-traefik__acme_dir: "{{ traefik_dir }}/acme"
+traefik__acme_dir: "{{ deploy_dir }}/acme"
 traefik__acme_email: ""
 traefik__acme_staging: false
 traefik__api_insecure: false
