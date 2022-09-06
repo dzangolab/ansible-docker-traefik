@@ -18,8 +18,21 @@
     dest: "{{ traefik__deploy_dir }}/traefik.yml"
     group: "{{ traefik__deploy_group }}"
     owner: "{{ traefik__deploy_user }}"
+    src: "templates/traefik-http.yml.j2"
+  when:
+    - traefik__state == "started"
+    - traefik__http_only
+
+- name: Copy files
+  become: true
+  template:
+    dest: "{{ traefik__deploy_dir }}/traefik.yml"
+    group: "{{ traefik__deploy_group }}"
+    owner: "{{ traefik__deploy_user }}"
     src: "templates/traefik.yml.j2"
-  when: traefik__state == "started"
+  when:
+    - traefik__state == "started"
+    - not traefik__http_only
 
 - name: Copy acme file
   become: true
@@ -30,7 +43,9 @@
     mode: 0600
     owner: "{{ traefik__deploy_user }}"
     src: "files/acme.json"
-  when: traefik__state == "started"
+  when:
+    - traefik__state == "started"
+    - not traefik__http_only
 
 - name: Setup logrotate
   become: true
