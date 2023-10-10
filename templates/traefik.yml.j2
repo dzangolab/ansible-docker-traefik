@@ -55,6 +55,12 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+{% if traefik__dns is defined %}
+    dns:
+{% for host in traefik__dns %}
+      - {{ host }}
+{% endfor %}
+{% endif %}
     image: "{{ traefik__image }}"
     networks:
       - "{{ traefik__network }}"
