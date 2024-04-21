@@ -63,7 +63,8 @@ services:
 {% endif %}
     image: "{{ traefik__image }}"
     networks:
-      - "{{ traefik__network }}"
+      - "{{ traefik__network_public }}"
+      - "{{ traefik__network_private }}"
     ports:
       - target: 80
         published: 80

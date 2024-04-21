@@ -17,14 +17,15 @@ traefik__expose_by_default: false
 
 traefik__http_only: false
 
-traefik__image: "traefik:v2.10.4"
+traefik__image: "traefik:v2.11.2"
 
 traefik__label: traefik
 traefik__log_dir: "{{traefik__deploy_dir}}/logs"
 traefik__log_format: "common"
 traefik__log_level: ERROR
 
-traefik__network: traefik
+traefik__network_public: public
+traefik__network_private: private
 
 traefik__refresh: 15
 
