@@ -18,7 +18,7 @@ services:
       - "--log.format={{ traefik__log_format }}"
       - "--log.level={{ traefik__log_level }}"
       - "--providers.docker.exposedByDefault={{ traefik__expose_by_default }}"
-      - "--providers.docker.network={{ traefik__network }}"
+      - "--providers.docker.network={{ traefik__network_private }}"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.swarmModeRefreshSeconds={{ traefik__refresh }}"
       - "--entrypoints.web.address=:80"
@@ -32,7 +32,7 @@ services:
       - "--certificatesresolvers.le.acme.tlschallenge=true"
     deploy:
       labels:
-        - "traefik.docker.network={{ traefik__network }}"
+        - "traefik.docker.network={{ traefik__network_public }}"
         - "traefik.enable=true"
         - "traefik.http.middlewares.auth.basicauth.users={{ traefik__dashboard_basicauth_passwords | join(',') }}"
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
