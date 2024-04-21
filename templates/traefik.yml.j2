@@ -2,7 +2,9 @@
 version: "3.7"
 
 networks:
-  {{ traefik__network }}:
+  {{ traefik__network_private }}:
+    external: true
+  {{ traefik__network_public }}:
     external: true
     
 services:
@@ -63,8 +65,8 @@ services:
 {% endif %}
     image: "{{ traefik__image }}"
     networks:
-      - "{{ traefik__network_public }}"
       - "{{ traefik__network_private }}"
+      - "{{ traefik__network_public }}"
     ports:
       - target: 80
         published: 80
