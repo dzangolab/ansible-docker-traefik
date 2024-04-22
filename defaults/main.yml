@@ -11,6 +11,9 @@ traefik__debug: false
 traefik__deploy_dir: /mnt/data/traefik
 traefik__deploy_group: www-data
 traefik__deploy_user: www-data
+traefik__dns:
+  - 1.1.1.1
+  - 8.8.8.8
 traefik__domain: ""
 
 traefik__expose_by_default: false
