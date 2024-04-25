@@ -2,9 +2,7 @@
 version: "3.7"
 
 networks:
-  {{ traefik__network_private }}:
-    external: true
-  {{ traefik__network_public }}:
+  {{ traefik__network }}:
     external: true
     
 services:
@@ -18,7 +16,7 @@ services:
       - "--log.format={{ traefik__log_format }}"
       - "--log.level={{ traefik__log_level }}"
       - "--providers.docker.exposedByDefault={{ traefik__expose_by_default }}"
-      - "--providers.docker.network={{ traefik__network_private }}"
+      - "--providers.docker.network={{ traefik__network }}"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.swarmModeRefreshSeconds={{ traefik__refresh }}"
       - "--entrypoints.web.address=:80"
@@ -32,7 +30,7 @@ services:
       - "--certificatesresolvers.le.acme.tlschallenge=true"
     deploy:
       labels:
-        - "traefik.docker.network={{ traefik__network_public }}"
+        - "traefik.docker.network={{ traefik__network }}"
         - "traefik.enable=true"
         - "traefik.http.middlewares.auth.basicauth.users={{ traefik__dashboard_basicauth_passwords | join(',') }}"
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
@@ -65,8 +63,7 @@ services:
 {% endif %}
     image: "{{ traefik__image }}"
     networks:
-      - "{{ traefik__network_private }}"
-      - "{{ traefik__network_public }}"
+      - "{{ traefik__network }}"
     ports:
       - target: 80
         published: 80
@@ -78,6 +75,3 @@ services:
       - "{{ traefik__acme_dir }}:/etc/traefik"
       - "{{ traefik__log_dir }}:/var/log/traefik"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-volumes:
-  acme:

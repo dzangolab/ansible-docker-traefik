@@ -2,9 +2,7 @@
 version: "3.7"
 
 networks:
-  {{ traefik__network_private }}:
-    external: true
-  {{ traefik__network_public }}:
+  {{ traefik__network }}:
     external: true
 
 services:
@@ -41,8 +39,7 @@ services:
         window: 120s
     image: "{{ traefik__image }}"
     networks:
-      - "{{ traefik__network_private }}"
-      - "{{ traefik__network_public }}"
+      - "{{ traefik__network }}"
     ports:
       - target: 80
         published: 80
@@ -54,6 +51,3 @@ services:
       - "{{ traefik__acme_dir }}:/etc/traefik"
       - "{{ traefik__log_dir }}:/var/log/traefik"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-volumes:
-  acme:
